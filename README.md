@@ -1,3 +1,61 @@
+# CMake build for tflite-micro
+This fork enables tensorflow lite for microcontrollers with CMake.
+It can be used for easy integration of tflite-micro in existing CMake projects. The fork includes an option to build the project with
+the Raspberry PI Pico SDK.
+
+## Build and Test tflite-micro standalone project
+The default build type is set to Release.
+Build the project with testing enabled :
+```
+git clone https://github.com/ericheim/tflite-micro.git
+mkdir build
+cd build
+cmake ../tflite-micro -DTFLITE_BUILD_TESTING=ON
+make -j 12
+```
+Run the tests:
+```
+ctest
+```
+The following paramters can be passed to the build:
+```
+-DCMAKE_BUILD_TYPE=[Release|Debug]     # default: Release
+-DTFLITE_BUILD_TESTING=[ON|OFF]        # default: OFF
+-DTFLITE_STRIP_ERROR_STRINGS=[ON|OFF]  # default: ON
+```
+
+## How to add tflite-micro to your project
+tflite-micro can be included into an existing CMake project by using
+add_subdirectory() in a similar way as it is done for Tensorflow lite:
+```
+set(TFMICRO_SOURCE_DIR "" CACHE PATH
+  "Directory that contains the TensorFlow project" )
+if(NOT TFMICRO_SOURCE_DIR)
+  get_filename_component(TFMICRO_SOURCE_DIR
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)
+endif()
+
+add_subdirectory(
+  "${TFMICRO_SOURCE_DIR}"
+  "${CMAKE_CURRENT_BINARY_DIR}/tfmicro" EXCLUDE_FROM_ALL)
+
+# Use it by linking tensorflow-lite micro
+add_executable(minimal minimal.cc)
+target_link_libraries(minimal tensorflow-micro)
+```
+Configure your project with the path to tflite-micro:
+```
+cmake ../<path_your_project>  -DTFMICRO_SOURCE_DIR=<path_to_tflite_micro>
+```
+
+## Enable build for Rapsberry PI Pico
+When you have the PICO_SDK_PATH set in your project, tflite-micro will use the Raspberry PI Pico as target platform.
+In that case platform specific headers from the PICO_SDK and the implementation
+of clock and logging in /tensorflow/lite/micro/rp2 will be used.
+
+## Build for different Microcontroller
+You can probably just add platform specific implementations like it is done for rp2.
+
 <!--ts-->
    * [TensorFlow Lite for Microcontrollers](#tensorflow-lite-for-microcontrollers)
    * [Build Status](#build-status)
