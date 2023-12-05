@@ -133,6 +133,9 @@ py_package(
     # in the tflm tree.
     packages = [
         "python.tflite_micro",
+        "python.tflite_micro.signal",
+        "python.tflite_micro.signal.utils",
+        "python.tflite_micro.signal.ops",
         "tensorflow.lite.micro.tools.generate_test_for_model",
         "tensorflow.lite.python",
         "tensorflow.lite.tools.flatbuffer_utils",
@@ -140,6 +143,8 @@ py_package(
     deps = [
         ":postinstall_check",
         ":runtime",
+        "//python/tflite_micro/signal:ops",
+        "//python/tflite_micro/signal/utils:util",
         ":version",
     ],
 )
@@ -228,7 +233,7 @@ py_wheel(
     requires = [
         "flatbuffers",
         "numpy",
-        "tensorflow",
+        "tensorflow (==2.18.0)",
     ],
     stamp = 1,  # 1 == always stamp
     strip_path_prefixes = [package_name()],

@@ -26,8 +26,9 @@
 # is sensitive to the Python environment (interpreter version, etc.) in which
 # it is run.
 
+
 hexdump
-tensorflow
+tensorflow-cpu==2.18.0
 twine
 numpy
 mako
