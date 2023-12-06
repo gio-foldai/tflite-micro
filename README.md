@@ -32,7 +32,7 @@ set(TFMICRO_SOURCE_DIR "" CACHE PATH
   "Directory that contains the TensorFlow project" )
 if(NOT TFMICRO_SOURCE_DIR)
   get_filename_component(TFMICRO_SOURCE_DIR
-    "${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)
+    "${PROJECT_SOURCE_DIR}/../tflite-micro" ABSOLUTE)
 endif()
 
 add_subdirectory(
