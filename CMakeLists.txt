@@ -64,8 +64,8 @@ file(GLOB SRC_SIGNAL_KISS_FFT
     "${SIGNAL_DIR}/src/kiss_fft_wrappers/*.cc")
 
 set(SRC_SIGNAL_ALL
-    "${signal_micro_kernels}"
-    "${signal_src}"
+    "${SRC_SIGNAL_MICRO_KERNELS}"
+    "${SRC_SIGNAL}"
     "${SRC_SIGNAL_KISS_FFT}")
 
 list(REMOVE_ITEM SRC_MICRO_FRONTEND "${TFMICRO_FRONTEND_DIR}/frontend_memmap_main.c")
@@ -242,9 +242,12 @@ if(TFLITE_BUILD_TESTING)
         get_filename_component(test_name ${test_file} NAME)
         string(REPLACE ".cc" "" test_name ${test_name})
 
-        add_executable(${test_name} "${test_file}")
-        target_link_libraries(${test_name} tensorflow-micro)
-
-        add_test(NAME ${test_name} COMMAND ${test_name})
+        # TODO: there are two different fft_test and window_test.
+        #       Put them in subfolders accordingly
+        if(NOT TARGET ${test_name})
+            add_executable(${test_name} "${test_file}")
+            target_link_libraries(${test_name} tensorflow-micro)
+            add_test(NAME ${test_name} COMMAND ${test_name})
+        endif()
     endforeach()
 endif()
