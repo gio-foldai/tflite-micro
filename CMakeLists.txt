@@ -93,6 +93,8 @@ set(SRC_ALL
     "${TFLITE_DIR}/schema/schema_utils.cc"
 )
 
+set(TFLITE_TEST_INCLUDE_DIRS )
+
 if(TFLITE_BUILD_TESTING)
     set(SRC_TEST "${SRC_ALL}")
     list(FILTER SRC_TEST INCLUDE REGEX ".*_test\\.cc$")
@@ -109,6 +111,8 @@ if(TFLITE_BUILD_TESTING)
     )
 
     list(REMOVE_ITEM SRC_TEST ${disabled_tests})
+    list(APPEND SRC_ALL "${SIGNAL_DIR}/testdata/fft_test_data.cc")
+    set(TFLITE_TEST_INCLUDE_DIRS "${SIGNAL_DIR}/testdata")
 endif()
 
 # Remove all test sources from the library
@@ -171,6 +175,7 @@ target_include_directories(tensorflow-micro
     ${KISSFFT_HEADERS}
     ${GEMMLOWP_HEADERS}
     ${RUY_HEADERS}
+    ${TFLITE_TEST_INCLUDE_DIRS}
 )
 
 if(TFLITE_STRIP_ERROR_STRINGS)
@@ -242,12 +247,14 @@ if(TFLITE_BUILD_TESTING)
         get_filename_component(test_name ${test_file} NAME)
         string(REPLACE ".cc" "" test_name ${test_name})
 
-        # TODO: there are two different fft_test and window_test.
-        #       Put them in subfolders accordingly
-        if(NOT TARGET ${test_name})
-            add_executable(${test_name} "${test_file}")
-            target_link_libraries(${test_name} tensorflow-micro)
-            add_test(NAME ${test_name} COMMAND ${test_name})
+        if(TARGET ${test_name})
+            get_filename_component(directory_name ${test_file} DIRECTORY)
+            get_filename_component(parent_directory ${directory_name} NAME)
+            set(test_name ${parent_directory}_${test_name})
         endif()
+
+        add_executable(${test_name} "${test_file}")
+        target_link_libraries(${test_name} tensorflow-micro)
+        add_test(NAME ${test_name} COMMAND ${test_name})
     endforeach()
 endif()
