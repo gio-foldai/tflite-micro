@@ -4,11 +4,12 @@ project(tensorflow-micro LANGUAGES C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
-if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "Setting build type to Release, for debug builds use"
-  "'-DCMAKE_BUILD_TYPE=Debug'.")
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
+#if(NOT CMAKE_BUILD_TYPE)
+#  message(STATUS "Setting build type to Release, for debug builds use"
+#  "'-DCMAKE_BUILD_TYPE=Debug'.")
+# TODO: Force release build. Fix debug compile error.
+set(CMAKE_BUILD_TYPE "Release")
+#endif()
 
 option(TFLITE_BUILD_TESTING "Build project tests." OFF)
 option(TFLITE_STRIP_ERROR_STRINGS "Remove error strings to reduce binary size." ON)
