@@ -27,6 +27,7 @@ set(TFMICRO_DIR "${TFLITE_DIR}/micro")
 set(TFMICRO_FRONTEND_DIR "${TFLITE_DIR}/experimental/microfrontend/lib")
 set(TFMICRO_KERNELS_DIR "${TFMICRO_DIR}/kernels")
 set(TFMICRO_TOOLS_DIR "${TFMICRO_DIR}/tools/make")
+set(TFMICRO_DOWNLOAD_DIR "${TFMICRO_TOOLS_DIR}/downloads")
 
 file(GLOB SRC_MICRO
     "${TFMICRO_DIR}/*.cc"
@@ -129,15 +130,15 @@ if(TFLITE_ENABLE_PICO)
         "${TFMICRO_DIR}/rp2/micro_time.cc")
 endif()
 
-set(FLATBUFFERS_HEADERS "${TFMICRO_DIR}/tools/make/downloads/flatbuffers/include")
-set(KISSFFT_HEADERS "${TFMICRO_DIR}/tools/make/downloads/kissfft")
+set(FLATBUFFERS_HEADERS "${TFMICRO_DOWNLOAD_DIR}/flatbuffers/include")
+set(KISSFFT_HEADERS "${TFMICRO_DOWNLOAD_DIR}/kissfft")
 
 macro(add_thirdparty_dependency target_name outfile)
     add_custom_command(
         OUTPUT ${outfile}
         WORKING_DIRECTORY "${TFLITE_ROOT}"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${TFMICRO_TOOLS_DIR}/downloads"
-        COMMAND "${TFMICRO_TOOLS_DIR}/${target_name}_download.sh" "${TFMICRO_TOOLS_DIR}/downloads"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${TFMICRO_DOWNLOAD_DIR}"
+        COMMAND "${TFMICRO_TOOLS_DIR}/${target_name}_download.sh" "${TFMICRO_DOWNLOAD_DIR}" "${PROJECT_SOURCE_DIR}/"
         DEPENDS "${TFMICRO_TOOLS_DIR}/${target_name}_download.sh"
     )
     add_custom_target(${target_name} DEPENDS ${outfile})
