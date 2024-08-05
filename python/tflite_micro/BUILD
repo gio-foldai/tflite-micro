@@ -231,7 +231,7 @@ py_wheel(
     requires = [
         "flatbuffers",
         "numpy",
-        "tensorflow (==2.12.0)",
+        "tensorflow (==2.15.1)",
     ],
     stamp = 1,  # 1 == always stamp
     strip_path_prefixes = [package_name()],
